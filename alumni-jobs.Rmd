@@ -1,0 +1,68 @@
+---
+title: "MSiA Alumni Placements"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+```{r load-data, message=FALSE}
+source("alumni-jobs.R")
+alumni <- get_all_alumni_data()
+```
+
+
+Column {data-width=200}
+-----------------------------------------------------------------------
+
+### All Placements
+
+```{r}
+tibble(Company = sort(unique(alumni$Company))) %>% 
+  knitr::kable()
+```
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Most Frequent Companies
+
+```{r}
+most_frequent <- alumni %>% 
+  group_by(Company) %>% 
+  count(sort = TRUE) %>% 
+  filter(n > 1) %>% 
+  drop_na()
+
+knitr::kable(most_frequent)
+```
+
+### Most Frequent Companies {data-height=700}
+
+```{r}
+most_frequent %>% 
+  ggplot() +
+  geom_col(aes(x = fct_inorder(Company), y = n)) +
+  xlab("Company") +
+  ylab("Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+```
+
+Column {data-width=200}
+-----------------------------------------------------------------------
+
+### Most Common Roles
+
+```{r}
+alumni %>% 
+  group_by(Role) %>% 
+  count(sort = TRUE) %>% 
+  drop_na() %>% 
+  knitr::kable()
+```
+
