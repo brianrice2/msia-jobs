@@ -11,7 +11,7 @@ library(flexdashboard)
 ```
 
 ```{r load-data, message=FALSE}
-source("alumni-jobs.R")
+source("preprocess.R")
 alumni <- get_all_alumni_data()
 ```
 

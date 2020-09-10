@@ -30,16 +30,23 @@ get_cohort_data <- function(year) {
     # split up title into separate role and company columns
     separate(Title, into = c("Role", "Company"), sep = " at ")
 
+  # combine different spellings of the same company
   cohort$Company <- cohort$Company %>%
-    # combine different spellings of the same company
     str_replace(pattern = "Blue Cross and Blue Shield of Illinois",
                 replacement = "Blue Cross and Blue Shield") %>%
     str_replace(pattern = " *\\(.*\\)",  # remove all items in parentheses, e.g. "JPL (...)"
                 replacement = "") %>%
-    str_replace(pattern = "^JPL",
-                replacement = "NASA JPL") %>%
-    str_replace(pattern = "KPMG US",
-                replacement = "KPMG")
+    str_replace(pattern = "^JPL", replacement = "NASA JPL") %>%
+    str_replace(pattern = "KPMG US", replacement = "KPMG")
+
+  # by manual inspection, I found a typo in role
+  cohort$Role <- cohort$Role %>%
+    str_replace("Seinor Data Scientist", "Senior Data Scientist")
+
+  # drop rows with no role/company info available
+  cohort <- cohort %>%
+    drop_na() %>%
+    filter(str_detect(Role, "Resume", negate = TRUE))
 
   cohort
 }

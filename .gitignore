@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+rsconnect/
+
+# I would prefer to not overtly publish individuals' names
+alumni-data.csv
